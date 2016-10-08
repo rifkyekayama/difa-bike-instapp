@@ -24,6 +24,8 @@
 				</div>
 			</div>
 		</li>
+		<li class="bold"><a href="{{ route('user-control.index') }}" class="waves-effect waves-cyan"><i class="mdi-action-accessibility"></i> {{ 'User Control' }}</a>
+		</li>
 	</ul>
 	<a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only cyan"><i class="mdi-navigation-menu"></i></a>
 </aside>

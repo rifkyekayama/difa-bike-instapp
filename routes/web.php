@@ -14,3 +14,7 @@
 Route::auth();
 
 Route::get('/', 'homeController@index')->name('index');
+
+Route::group(['namespace' => 'UserControl'], function(){
+	Route::resource('user-control', 'UserController');
+});

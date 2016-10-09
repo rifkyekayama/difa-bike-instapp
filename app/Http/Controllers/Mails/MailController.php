@@ -13,6 +13,8 @@ use App\Models\Mails\Mail;
 use App\Models\Orders\Order;
 use App\Models\Setting\App;
 
+use App\Events\NewOrder;
+
 class MailController extends Controller
 {
 	//
@@ -78,6 +80,8 @@ class MailController extends Controller
 					  	  ->withLongitude($mailcontent[$key+1]->longitude)
 					  	  ->saveLokasi();
 				}
+
+				event(new NewOrder($order->nama));
 			}
 		}
 

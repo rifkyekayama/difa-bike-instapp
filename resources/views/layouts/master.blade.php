@@ -85,6 +85,8 @@
 	<!-- START FOOTER -->
 	@include('includes/footer')
 	<!-- END FOOTER -->
+
+	<audio id="chatAudio"><source src="{{ asset('sound/notify.ogg') }}" type="audio/ogg"></audio>
 		
 	<!-- jQuery Library -->
 	<script type="text/javascript" src="{{ asset('js/plugins/jquery-1.11.2.min.js') }}"></script>    
@@ -97,14 +99,37 @@
 	<!-- chartist -->
 	<script type="text/javascript" src="{{ asset('js/plugins/chartist-js/chartist.min.js') }}"></script>   
 	<!--sweetalert -->
-    <script type="text/javascript" src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
 	<!--plugins.js - Some Specific JS codes for Plugin Settings-->
 	<script type="text/javascript" src="{{ asset('js/plugins.min.js') }}"></script>
 	<!--custom-script.js - Add your own theme custom JS-->
 	<script type="text/javascript" src="{{ asset('js/custom-script.js') }}"></script>
+	{{-- Pusher --}}
+	<script src="//js.pusher.com/3.2/pusher.min.js"></script>
 
 	@yield('js')
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var pusher = new Pusher('038bf37bcfcdc6829863', {
+				encrypted: true
+			});
+
+			var orderEvent = pusher.subscribe('newOrder');
+			orderEvent.bind("App\\Events\\NewOrder", function(data) {
+				$('#chatAudio')[0].play();
+				$('#notification-container').append('<li><a href="#!"><i class="mdi-action-add-shopping-cart"></i> '+data['data']+'</a><time class="media-meta" datetime="2015-06-12T20:50:48+08:00">2 hours ago</time></li>');
+			});
+
+			setInterval(function(){
+				$.ajax({
+					type: "GET",
+					url: "{{ url('message') }}",
+					cache: false
+				});
+			}, 10000);
+		});
+	</script>
 </body>
 
 </html>

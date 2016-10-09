@@ -29,7 +29,7 @@ class NewOrder extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database', 'broadcast'];
     }
 
     /**
@@ -52,10 +52,25 @@ class NewOrder extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toDatabase($notifiable)
     {
         return [
             //
+            'data' => 'data'
+        ];
+    }
+
+    /**
+     * Get the array representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toBroadcast($notifiable)
+    {
+        return [
+            //
+            'data' => 'data'
         ];
     }
 }

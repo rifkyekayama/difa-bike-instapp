@@ -76,6 +76,7 @@ class MailHelpers{
 					}
 				}
 		}
+		$this->deleteAttachment();
 		return $result;
 	}
 
@@ -100,7 +101,7 @@ class MailHelpers{
 						$ext = pathinfo($attach->filePath, PATHINFO_EXTENSION);
 						if($ext == "html"){
 							$myfile = fopen($attach->filePath, "r") or die("Unable to open file!");
-							dd($myfile);
+
 							$mailContent = fread($myfile,filesize($attach->filePath));
 
 							$mailContent = strip_tags($mailContent);
@@ -142,7 +143,8 @@ class MailHelpers{
 			}
 			$index--;
 		}
-
+		
+		$this->deleteAttachment();
 		return array_reverse($result);
 	}
 
@@ -287,5 +289,10 @@ class MailHelpers{
 		$result["subject"] = $mail->subject;
 		$result["content"] = json_encode($mailContent);
 		return $result;
+	}
+
+	public function deleteAttachment()
+	{
+		array_map('unlink', glob(app_path('Mails/Attachments')."/*"));
 	}
 }

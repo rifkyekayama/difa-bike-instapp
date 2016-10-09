@@ -7,6 +7,7 @@ use App\Libs\PhpImap\IncomingMail;
 use App\Libs\PhpImap\IncomingMailAttachment;
 
 use App\Models\Mails\Mail;
+use App\Models\Setting\App;
 
 class MailHelpers{
 
@@ -28,61 +29,14 @@ class MailHelpers{
 	public function getMessages(){
 		$result = [];
 		$item = [];
+		$setting = App::find(1);
+		$isApps = false;
+
 		for($i=0;$i<sizeof($this->mailsIds);$i++){
 			$mail = $this->mailbox->getMail($this->mailsIds[$i]);
 			foreach ($mail->getAttachments() as $attach) {
-				# code...
-				$ext = pathinfo($attach->filePath, PATHINFO_EXTENSION);
-				if($ext == "html"){
-					$myfile = fopen($attach->filePath, "r") or die("Unable to open file!");
-					$mailContent = fread($myfile,filesize($attach->filePath));
-
-					$mailContent = strip_tags($mailContent);
-
-					$mailContent = explode(PHP_EOL, $mailContent);
-					
-					for($j=0;$j<sizeof($mailContent);$j++){
-						$mailContent[$j] = trim($mailContent[$j]);
-					}
-
-					$mailContent =  array_values(array_filter($mailContent, function($value) { return $value !== ''; }));
-
-					$mailContent = $this->getGPSData($mailContent);
-
-					for($j=0; $j<sizeof($mailContent); $j++){
-						$mailContent[$j] = str_replace(':', '', $mailContent[$j]);
-					}
-
-					if($this->checkMail($mail->subject, "") == "order"){
-						array_splice($mailContent, 0, 2);
-						$item = $this->getDetailOrder($mailContent);
-					}
-				}
-			}
-			if($this->checkMail($mail->subject, "") == "order"){
-				array_push($result, $this->getDataOrder($mail, $mailContent, $item));
-			}else{
-				array_push($result, $this->getDataFormEditor($mail, $mailContent));
-			}
-		}
-		return $result;
-	}
-
-	public function getMessagesUnRead(){
-		$result = [];
-		$switch = true;
-		$index = sizeof($this->mailsIds)-1;
-
-		$lastIndex = Mail::orderBy('mail_index', 'desc')->first();
-		while($switch){
-
-			$mail = $this->mailbox->getMail($this->mailsIds[$index]);
-			$id = $mail->id;
-
-			if($id > $lastIndex->mail_index){
-
-				foreach ($mail->getAttachments() as $attach) {
-				# code...
+				if(strpos($mail->subject, "[".$setting->name."]") !== false){
+					# code...
 					$ext = pathinfo($attach->filePath, PATHINFO_EXTENSION);
 					if($ext == "html"){
 						$myfile = fopen($attach->filePath, "r") or die("Unable to open file!");
@@ -99,7 +53,7 @@ class MailHelpers{
 						$mailContent =  array_values(array_filter($mailContent, function($value) { return $value !== ''; }));
 
 						$mailContent = $this->getGPSData($mailContent);
-					
+
 						for($j=0; $j<sizeof($mailContent); $j++){
 							$mailContent[$j] = str_replace(':', '', $mailContent[$j]);
 						}
@@ -109,12 +63,79 @@ class MailHelpers{
 							$item = $this->getDetailOrder($mailContent);
 						}
 					}
+					$isApps = true;
+				}
+			}
+			if($this->checkMail($mail->subject, "") == "order"){
+					if($isApps){
+						array_push($result, $this->getDataOrder($mail, $mailContent, $item));
+					}
+				}else{
+					if($isApps){
+						array_push($result, $this->getDataFormEditor($mail, $mailContent));
+					}
+				}
+		}
+		return $result;
+	}
+
+	public function getMessagesUnRead(){
+		$result = [];
+		$switch = true;
+		$index = sizeof($this->mailsIds)-1;
+		$setting = App::find(1);
+		$isApps = false;
+
+		$lastIndex = Mail::orderBy('mail_index', 'desc')->first();
+		while($switch){
+
+			$mail = $this->mailbox->getMail($this->mailsIds[$index]);
+			$id = $mail->id;
+
+			if($id > $lastIndex->mail_index){
+
+				foreach ($mail->getAttachments() as $attach) {
+				# code...
+					if(strpos($mail->subject, "[".$setting->name."]") !== false){
+						$ext = pathinfo($attach->filePath, PATHINFO_EXTENSION);
+						if($ext == "html"){
+							$myfile = fopen($attach->filePath, "r") or die("Unable to open file!");
+							dd($myfile);
+							$mailContent = fread($myfile,filesize($attach->filePath));
+
+							$mailContent = strip_tags($mailContent);
+
+							$mailContent = explode(PHP_EOL, $mailContent);
+							
+							for($j=0;$j<sizeof($mailContent);$j++){
+								$mailContent[$j] = trim($mailContent[$j]);
+							}
+
+							$mailContent =  array_values(array_filter($mailContent, function($value) { return $value !== ''; }));
+
+							$mailContent = $this->getGPSData($mailContent);
+						
+							for($j=0; $j<sizeof($mailContent); $j++){
+								$mailContent[$j] = str_replace(':', '', $mailContent[$j]);
+							}
+
+							if($this->checkMail($mail->subject, "") == "order"){
+								array_splice($mailContent, 0, 2);
+								$item = $this->getDetailOrder($mailContent);
+							}
+						}
+						$isApps = true;
+					}
 				}
 
 				if($this->checkMail($mail->subject, "") == "order"){
-					array_push($result, $this->getDataOrder($mail, $mailContent, $item));
+					if($isApps){
+						array_push($result, $this->getDataOrder($mail, $mailContent, $item));
+					}
 				}else{
-					array_push($result, $this->getDataFormEditor($mail, $mailContent));
+					if($isApps){
+						array_push($result, $this->getDataFormEditor($mail, $mailContent));
+					}
 				}
 			}else{
 				$switch = false;

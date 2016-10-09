@@ -15,7 +15,10 @@
 				<td>{{ $order->nama }}</td>
 				<td>{{ $order->hp }}</td>
 				<td>{{ date("D, d M Y", strtotime($order->tgl_pemesanan)) }}</td>
-				<td><button class="btn waves-effect waves-light green" id="btnLocation" data-id="{{ encrypt($order->id) }}"><i class="mdi-communication-location-on"></i></button></td>
+				<td>
+					{{-- <button class="btn waves-effect waves-light green" id="btnLocation" data-id="{{ encrypt($order->id) }}"><i class="mdi-communication-location-on"></i></button> --}}
+					{{ $order->lokasi->latitude.",".$order->lokasi->longitude }}
+				</td>
 				<td>{{ $order->ket_lokasi_penjemputan }}</td>
 				<td>{{ $order->tujuan }}</td>
 			</tr>

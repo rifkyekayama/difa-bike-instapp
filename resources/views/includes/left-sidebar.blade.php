@@ -14,12 +14,10 @@
 						<li><a href="#"><i class="mdi-communication-live-help"></i> Help</a>
 						</li>
 						<li class="divider"></li>
-						<li><a href="#"><i class="mdi-action-lock-outline"></i> Lock</a>
-						</li>
-						<li><a href="#"><i class="mdi-hardware-keyboard-tab"></i> Logout</a>
+						<li><a href="{{ route('logout') }}"><i class="mdi-hardware-keyboard-tab"></i> Logout</a>
 						</li>
 					</ul>
-					<a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" data-activates="profile-dropdown">John Doe<i class="mdi-navigation-arrow-drop-down right"></i></a>
+					<a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" data-activates="profile-dropdown">{{ auth()->user()->name }}<i class="mdi-navigation-arrow-drop-down right"></i></a>
 					<p class="user-roal">Administrator</p>
 				</div>
 			</div>

@@ -4,7 +4,7 @@
 		<nav class="navbar-color">
 			<div class="nav-wrapper">
 				<ul class="left">                      
-					<li><h1 class="logo-wrapper"><a href="index.html" class="brand-logo darken-1"><img src="{{ asset('images/materialize-logo.png') }}" alt="materialize logo"></a> <span class="logo-text">Materialize</span></h1></li>
+					<li><h1 class="logo-wrapper"><a href="{{ route('index') }}" class="brand-logo darken-1"><img src="{{ asset('images/materialize-logo.png') }}" alt="materialize logo"></a> <span class="logo-text">Materialize</span></h1></li>
 				</ul>
 				<div class="header-search-wrapper hide-on-med-and-down">
 						<i class="mdi-action-search"></i>

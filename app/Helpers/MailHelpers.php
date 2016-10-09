@@ -6,7 +6,7 @@ use App\Libs\PhpImap\Mailbox as ImapMailbox;
 use App\Libs\PhpImap\IncomingMail;
 use App\Libs\PhpImap\IncomingMailAttachment;
 
-use App\Models\Mails\Mails;
+use App\Models\Mails\Mail;
 
 class MailHelpers{
 
@@ -35,17 +35,23 @@ class MailHelpers{
 				$ext = pathinfo($attach->filePath, PATHINFO_EXTENSION);
 				if($ext == "html"){
 					$myfile = fopen($attach->filePath, "r") or die("Unable to open file!");
-					$text = fread($myfile,filesize($attach->filePath));
+					$mailContent = fread($myfile,filesize($attach->filePath));
 
-					$clean = strip_tags($text);
+					$mailContent = strip_tags($mailContent);
 
-					$val = explode(PHP_EOL, $clean);
+					$mailContent = explode(PHP_EOL, $mailContent);
 					
-					for($j=0;$j<sizeof($val);$j++){
-						$val[$j] = trim($val[$j]);
+					for($j=0;$j<sizeof($mailContent);$j++){
+						$mailContent[$j] = trim($mailContent[$j]);
 					}
 
-					$mailContent =  array_values(array_filter($val, function($value) { return $value !== ''; }));
+					$mailContent =  array_values(array_filter($mailContent, function($value) { return $value !== ''; }));
+
+					$mailContent = $this->getGPSData($mailContent);
+
+					for($j=0; $j<sizeof($mailContent); $j++){
+						$mailContent[$j] = str_replace(':', '', $mailContent[$j]);
+					}
 
 					if($this->checkMail($mail->subject, "") == "order"){
 						array_splice($mailContent, 0, 2);
@@ -67,7 +73,7 @@ class MailHelpers{
 		$switch = true;
 		$index = sizeof($this->mailsIds)-1;
 
-		$lastIndex = Mails::orderBy('mail_index', 'desc')->first();
+		$lastIndex = Mail::orderBy('mail_index', 'desc')->first();
 		while($switch){
 
 			$mail = $this->mailbox->getMail($this->mailsIds[$index]);
@@ -80,17 +86,23 @@ class MailHelpers{
 					$ext = pathinfo($attach->filePath, PATHINFO_EXTENSION);
 					if($ext == "html"){
 						$myfile = fopen($attach->filePath, "r") or die("Unable to open file!");
-						$text = fread($myfile,filesize($attach->filePath));
+						$mailContent = fread($myfile,filesize($attach->filePath));
 
-						$clean = strip_tags($text);
+						$mailContent = strip_tags($mailContent);
 
-						$val = explode(PHP_EOL, $clean);
+						$mailContent = explode(PHP_EOL, $mailContent);
 						
-						for($j=0;$j<sizeof($val);$j++){
-							$val[$j] = trim($val[$j]);
+						for($j=0;$j<sizeof($mailContent);$j++){
+							$mailContent[$j] = trim($mailContent[$j]);
 						}
 
-						$mailContent =  array_values(array_filter($val, function($value) { return $value !== ''; }));
+						$mailContent =  array_values(array_filter($mailContent, function($value) { return $value !== ''; }));
+
+						$mailContent = $this->getGPSData($mailContent);
+					
+						for($j=0; $j<sizeof($mailContent); $j++){
+							$mailContent[$j] = str_replace(':', '', $mailContent[$j]);
+						}
 
 						if($this->checkMail($mail->subject, "") == "order"){
 							array_splice($mailContent, 0, 2);
@@ -121,6 +133,30 @@ class MailHelpers{
 			$mail = "formEditor";
 		}
 		return $mail;
+	}
+
+	public function getGPSData($mailContent){
+		for($j=0; $j<sizeof($mailContent); $j++){
+			if($j+3 <= sizeof($mailContent)){
+				if((strpos($mailContent[$j], 'Title') !== false) && (strpos($mailContent[$j+1], 'Address') !== false) && (strpos($mailContent[$j+2], 'Latitude') !== false) && (strpos($mailContent[$j+3], 'Longitude') !== false)){
+					$gps['title'] = explode(':', $mailContent[$j])[1];
+					$tmp = $j;
+					$j++;
+					$gps['address'] = explode(':', $mailContent[$j])[1];
+					unset($mailContent[$j]);
+					$j++;
+					$gps['latitude'] = explode(':', $mailContent[$j])[1];
+					unset($mailContent[$j]);
+					$j++;
+					$gps['longitude'] = explode(':', $mailContent[$j])[1];
+					unset($mailContent[$j]);
+					$j++;
+					$mailContent[$tmp] = $gps;
+				}
+			}
+		}
+
+		return array_values($mailContent);
 	}
 
 	public function getDetailOrder($mailContent){

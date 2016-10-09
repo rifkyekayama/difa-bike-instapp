@@ -36,7 +36,7 @@
 			<div class="row">
 				<div class="col s12">
 					<div id="table-container">
-						@include('pages.UserControl._table-user')
+						@include('pages.Order._table-order')
 					</div>
 				</div>
 			</div>
@@ -51,41 +51,33 @@
 		<!-- Floating Action Button -->
 	</div>
 	<!--end container-->
+
+	<div id="modal1" class="modal">
+		<div class="modal-content">
+			
+		</div>
+		<div class="modal-footer">
+			<button class="waves-effect waves-red btn-flat" id="closeModal">Close</button>
+		</div>
+	</div>
 @endsection
 
 @section('js')
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$(document).on('click', '#delete_user', function(){
-				var dataId = this.getAttribute('data-id');
-				var dataToken = this.getAttribute('data-token');
-				swal({
-					title: "Are you sure?",
-					text: "You will not be able to recover this imaginary file!",
-					type: "warning",
-					showCancelButton: true,
-					confirmButtonColor: '#DD6B55',
-					confirmButtonText: 'Yes, delete it!',
-					cancelButtonText: "No, cancel plx!",
-					closeOnConfirm: false,
-					closeOnCancel: false
-				},
-				function(isConfirm){
-				if (isConfirm){
-					$.ajax({
-						url: "{{ url('user-control') }}"+"/"+dataId,
-						type: 'DELETE',
-						data: { _token: dataToken},
-						cache: true,
-						success: function(data) {
-							$('#table-container').html(data);
-							swal("Deleted!", "Your imaginary file has been deleted!", "success");
-						}
-					});
-				} else {
-					swal("Cancelled", "Your imaginary file is safe :)", "error");
-				}
+			$(document).on('click', '#btnLocation', function(){
+				$.ajax({
+					type: "GET",
+					url: "{{ url('order') }}"+"/"+this.getAttribute('data-id'),
+					success: function(data){
+						$('.modal-content').html(data);
+						$('#modal1').openModal();
+					}
 				});
+			});
+
+			$('#closeModal').on("click", function(){
+				$('#modal1').closeModal();
 			});
 		});
 	</script>

@@ -169,6 +169,7 @@ return [
         Laratrust\LaratrustServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
+        Laracasts\Flash\FlashServiceProvider::class,
 
         //
 

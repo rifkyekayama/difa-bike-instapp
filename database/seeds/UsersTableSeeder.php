@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 
 use App\Models\UserControl\User;
+use App\Models\Setting\App;
 
 class UsersTableSeeder extends Seeder
 {
@@ -19,5 +20,9 @@ class UsersTableSeeder extends Seeder
     	$admin->email = "super@admin.com";
     	$admin->password = bcrypt('admin');
     	$admin->save();
+
+        $app = new App;
+        $app->name = 'difa Bike';
+        $app->save();
     }
 }

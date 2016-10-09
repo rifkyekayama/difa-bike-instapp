@@ -24,6 +24,12 @@
 				</div>
 			</div>
 		</li>
+		<li class="bold"><a href="{{ route('index') }}" class="waves-effect waves-cyan"><i class="mdi-action-dashboard"></i> {{ 'Dashboard' }}</a>
+		</li>
+
+		<li class="bold"><a href="{{ route('order.index') }}" class="waves-effect waves-cyan"><i class="mdi-maps-directions-bike"></i> {{ 'Pesanan' }}</a>
+		</li>
+		
 		<li class="bold"><a href="{{ route('user-control.index') }}" class="waves-effect waves-cyan"><i class="mdi-action-accessibility"></i> {{ 'User Control' }}</a>
 		</li>
 	</ul>

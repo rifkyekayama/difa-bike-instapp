@@ -31,14 +31,24 @@
 		<div class="section">
 			<div class="divider"></div>
 
-			<div id="card-alert" class="card red">
-				<div class="card-content white-text">
-					<p><i class="mdi-alert-error"></i> DANGER : The daily report has failed</p>
+			@if(count($errors) > 0)
+				<div id="card-alert" class="card red">
+					<div class="card-content white-text">
+						<p>
+							<i class="mdi-alert-error"></i> DANGER : Terjadi kesalahan dalam pengisian form!
+							<ul>
+								<?php $no=1; ?>
+								@foreach($errors->all() as $message)
+									<li>{{ $no++.". ".$message }}</li>
+								@endforeach
+							</ul>
+						</p>
+					</div>
+					<button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
 				</div>
-				<button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">×</span>
-				</button>
-			</div>
+			@endif
 
 			<!--Input fields-->
 			<div id="input-fields">
@@ -82,14 +92,6 @@
 				</div>
 			</div>
 		</div>
-		
-		<!-- Floating Action Button -->
-		<div class="fixed-action-btn" style="bottom: 50px; right: 19px;">
-			<a href="{{ route('user-control.create') }}" class="btn-floating btn-large">
-				<i class="mdi-content-add-circle"></i>
-			</a>
-		</div>
-		<!-- Floating Action Button -->
 	</div>
 	<!--end container-->
 @endsection

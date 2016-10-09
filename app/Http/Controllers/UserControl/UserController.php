@@ -50,7 +50,15 @@ class UserController extends Controller
     public function store(UserStore $request)
     {
         //
-        dd($request->all());
+        $user = new User;
+        $user->name = $request->get('name');
+        $user->email = $request->get('email');
+        $user->password = bcrypt($request->get('password'));
+        $user->save();
+
+        flash('User berhasil disimpan.');
+
+        return redirect()->route('user-control.index');
     }
 
     /**
@@ -73,6 +81,8 @@ class UserController extends Controller
     public function edit($id)
     {
         //
+        $user = User::find(decrypt($id));
+        return view('pages.UserControl.edit', compact('user'))->withTitle('Edit User');
     }
 
     /**
@@ -82,9 +92,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserStore $request, $id)
     {
         //
+        $user = User::find(decrypt($id));
+        $user->name = $request->get('name');
+        $user->email = $request->get('email');
+        $user->password = bcrypt($request->get('password'));
+        $user->update();
+
+        flash('User berhasil diubah.');
+
+        return redirect()->route('user-control.index');
     }
 
     /**
@@ -96,5 +115,10 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+        $user = User::find(decrypt($id));
+        $user->delete();
+
+        $users = User::all();
+        return view('pages.UserControl._table-user', compact('users'));
     }
 }

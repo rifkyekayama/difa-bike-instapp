@@ -18,3 +18,11 @@ Route::get('/', 'homeController@index')->name('index');
 Route::group(['namespace' => 'UserControl'], function(){
 	Route::resource('user-control', 'UserController');
 });
+
+Route::group(['namespace' => 'Mails'], function(){
+	Route::get('message', 'MailController@message');
+});
+
+Route::group(['namespace' => 'Order'], function(){
+	Route::resource('order', 'OrderController');
+});

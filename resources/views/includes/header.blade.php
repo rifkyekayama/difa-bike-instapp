@@ -15,7 +15,7 @@
 						</li>
 						<li><a href="javascript:void(0);" class="waves-effect waves-block waves-light toggle-fullscreen"><i class="mdi-action-settings-overscan"></i></a>
 						</li>
-						<li><a href="javascript:void(0);" class="waves-effect waves-block waves-light notification-button" data-activates="notifications-dropdown"><i class="mdi-social-notifications"><small class="notification-badge">5</small></i>
+						<li><a href="javascript:void(0);" class="waves-effect waves-block waves-light notification-button" data-activates="notifications-dropdown"><i class="mdi-social-notifications"><div id="notif"></div></i>
 						
 						</a>
 						</li>                        
@@ -25,15 +25,13 @@
 				<!-- notifications-dropdown -->
 				<ul id="notifications-dropdown" class="dropdown-content">
 					<li>
-						<h5>NOTIFICATIONS <span class="new badge">5</span></h5>
+						<h5>NOTIFICATIONS</h5>
 					</li>
 					<li class="divider"></li>
-					<div id="notification-container">
-						{{-- <li>
-							<a href="#!"><i class="mdi-action-add-shopping-cart"></i> A new order has been placed!</a>
-							<time class="media-meta" datetime="2015-06-12T20:50:48+08:00">2 hours ago</time>
-						</li> --}}
-					</div>
+					<div id="notification-container"></div>
+					<li>
+						<a href="#!"> See all notifications.</a>
+					</li>
 				</ul>
 			</div>
 		</nav>

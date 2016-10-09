@@ -55,8 +55,7 @@ class OrderController extends Controller
     {
         //
         $order = Order::find(decrypt($id));
-        $location = $order->lokasi;
-        return view('pages.Order._location', compact('location'));
+        return view('pages.Order._location', compact('order'));
     }
 
     /**

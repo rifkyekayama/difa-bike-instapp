@@ -114,11 +114,15 @@
 			var pusher = new Pusher('038bf37bcfcdc6829863', {
 				encrypted: true
 			});
+			var countNotif = 0;
 
 			var orderEvent = pusher.subscribe('newOrder');
 			orderEvent.bind("App\\Events\\NewOrder", function(data) {
 				$('#chatAudio')[0].play();
 				$('#notification-container').append('<li><a href="#!"><i class="mdi-action-add-shopping-cart"></i> '+data['data']+'</a><time class="media-meta" datetime="2015-06-12T20:50:48+08:00">2 hours ago</time></li>');
+				countNotif = {{ App\Helpers\Helpers::notifCount() }};
+				console.log(countNotif);
+				$('#notif').html('<small class="notification-badge">'+countNotif+'</small>');
 			});
 
 			setInterval(function(){

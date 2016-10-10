@@ -108,7 +108,6 @@
 	{{-- Pusher --}}
 	<script src="//js.pusher.com/3.2/pusher.min.js"></script>
 
-	@yield('js')
 	<script type="text/javascript">
 		$(document).ready(function(){
 			var pusher = new Pusher('038bf37bcfcdc6829863', {
@@ -121,8 +120,15 @@
 				$('#chatAudio')[0].play();
 				$('#notification-container').append('<li><a href="#!"><i class="mdi-action-add-shopping-cart"></i> '+data['data']+'</a><time class="media-meta" datetime="2015-06-12T20:50:48+08:00">2 hours ago</time></li>');
 				countNotif = {{ App\Helpers\Helpers::notifCount() }};
-				console.log(countNotif);
 				$('#notif').html('<small class="notification-badge">'+countNotif+'</small>');
+
+				$.ajax({
+					type: "GET",
+					url: "{{ url('order-table') }}",
+					success: function(data){
+						$('#table-container').html(data);
+					}
+				});
 			});
 
 			setInterval(function(){
@@ -134,6 +140,8 @@
 			}, 10000);
 		});
 	</script>
+
+	@yield('js')
 </body>
 
 </html>

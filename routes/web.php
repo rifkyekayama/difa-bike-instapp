@@ -26,4 +26,5 @@ Route::group(['namespace' => 'Mails'], function(){
 
 Route::group(['namespace' => 'Order'], function(){
 	Route::resource('order', 'OrderController');
+	Route::get('order-table', 'OrderController@refresh');
 });

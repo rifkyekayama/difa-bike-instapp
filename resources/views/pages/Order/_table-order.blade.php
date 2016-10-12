@@ -16,8 +16,11 @@
 				<td>{{ $order->hp }}</td>
 				<td>{{ date("D, d M Y", strtotime($order->tgl_pemesanan)) }}</td>
 				<td>
-					{{-- <button class="btn waves-effect waves-light green" id="btnLocation" data-id="{{ encrypt($order->id) }}"><i class="mdi-communication-location-on"></i></button> --}}
-					{{ $order->lokasi->latitude.",".$order->lokasi->longitude }}
+					<?php
+						$location = (!empty($order->lokasi->latitude) ? $order->lokasi->latitude : '').",".(!empty($order->lokasi->longitude) ? $order->lokasi->longitude : '');
+						$location = str_replace(' ', '', $location);
+					?>
+					{!! ($location != ',') ? '<a href="'.'http://maps.google.com/maps?q=loc:'.$location.'" target="_blank">http://maps.google.com/maps?q=loc:'.$location.'</a>' : '-' !!}
 				</td>
 				<td>{{ $order->ket_lokasi_penjemputan }}</td>
 				<td>{{ $order->tujuan }}</td>
